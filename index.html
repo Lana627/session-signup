@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Session Sign-Up</title>
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -345,13 +344,17 @@
 </div>
 
 <script>
-  // ── EmailJS config ──────────────────────────────────────────────────
-  const EMAILJS_PUBLIC_KEY  = "V1zqyUhyw-7PaBw2v";
+  // ── Power Automate URLs ─────────────────────────────────────────────
+  const PA_REGISTRATION_URL = "https://default06219a4aa83544d5afaf3926343bfb.89.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/fa5ab4e0beb24b879228d584b064e6ea/triggers/manual/paths/invoke?api-version=1";
+  const PA_TIME_REQUEST_URL = "https://default06219a4aa83544d5afaf3926343bfb.89.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/ad8dce6dfc4e4d2f944cbaf9baac2360/triggers/manual/paths/invoke?api-version=1";
+  // ───────────────────────────────────────────────────────────────────
+
+  // ── EmailJS config (used only for time requests until PA flow is set up) ──
+  const EMAILJS_PUBLIC_KEY  = "V1zqyUhyw-7Pa8w2v";
   const EMAILJS_SERVICE_ID  = "service_3vz79x3";
   const EMAILJS_TEMPLATE_ID = "template_5rooetf";
   // ───────────────────────────────────────────────────────────────────
 
-  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
   const MAX    = 25;
   const WARN_AT = 20;
@@ -593,35 +596,67 @@
     }
     if (!valid) return;
 
-    // ── Path A: Normal registration ──
+    // ── Path A: Normal registration → POST to Power Automate ──
     if (selectedSession) {
       const count = getCount(selectedSession);
       if (count >= MAX) {
         document.getElementById("sessionError").textContent = "This session just filled up. Please choose another.";
         renderTopics(); return;
       }
-      incrementCount(selectedSession);
+
       const allSessions = TOPICS.flatMap(t => t.sessions);
       const session     = allSessions.find(s => s.id === selectedSession);
       const topic       = TOPICS.find(t => t.sessions.some(s => s.id === selectedSession));
-      const remaining   = MAX - getCount(selectedSession);
 
-      let spotsNote = "";
-      if (remaining === 0) spotsNote = "<br/><em style='color:#c0392b;font-size:0.88rem;'>You took the last spot — this session is now full.</em>";
-      else if (remaining <= 5) spotsNote = `<br/><em style='color:#e07c00;font-size:0.88rem;'>${remaining} spot${remaining===1?"":"s"} remaining after your registration.</em>`;
+      setLoading(true);
 
-      document.getElementById("successTitle").textContent = "You're registered!";
-      document.getElementById("successDetail").innerHTML = `
-        <strong>${name}</strong>, you're confirmed for:<br/>
-        <strong style="color:#005a2b;">${topic.name}</strong><br/>
-        <span style="color:#556b55;">${session.time}</span><br/>
-        Confirmation noted for <strong>${email}</strong>.${spotsNote}`;
-      document.getElementById("successRequestNote").style.display = "none";
-      document.getElementById("emailSentNote").style.display = "none";
+      const payload = {
+        name,
+        email,
+        topic:     topic.name,
+        timeslot:  session.time,
+        timestamp: new Date().toLocaleString("en-US", { dateStyle:"full", timeStyle:"short" })
+      };
 
-      showSuccess();
+      try {
+        const res = await fetch(PA_REGISTRATION_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
 
-    // ── Path B: Request additional times → send email via EmailJS ──
+        if (!res.ok) throw new Error("PA error " + res.status);
+
+        // Only increment local count after successful save
+        incrementCount(selectedSession);
+        const remaining = MAX - getCount(selectedSession);
+
+        let spotsNote = "";
+        if (remaining === 0) spotsNote = "<br/><em style='color:#c0392b;font-size:0.88rem;'>You took the last spot — this session is now full.</em>";
+        else if (remaining <= 5) spotsNote = `<br/><em style='color:#e07c00;font-size:0.88rem;'>${remaining} spot${remaining===1?"":"s"} remaining after your registration.</em>`;
+
+        document.getElementById("successTitle").textContent = "You're registered!";
+        document.getElementById("successDetail").innerHTML = `
+          <strong>${name}</strong>, you're confirmed for:<br/>
+          <strong style="color:#005a2b;">${topic.name}</strong><br/>
+          <span style="color:#556b55;">${session.time}</span><br/>
+          Confirmation noted for <strong>${email}</strong>.${spotsNote}`;
+        document.getElementById("successRequestNote").style.display = "none";
+
+        const emailNote = document.getElementById("emailSentNote");
+        document.getElementById("emailSentText").textContent = "Your registration has been saved to the sign-up spreadsheet.";
+        emailNote.style.display = "flex";
+
+        showSuccess();
+
+      } catch (err) {
+        setLoading(false);
+        document.getElementById("sessionError").textContent =
+          "Registration could not be saved — please try again or contact the organizer directly.";
+        console.error("PA registration error:", err);
+      }
+
+    // ── Path B: Request additional times → POST to Power Automate ──
     } else {
       const topic = TOPICS.find(t => t.id === requestedTopicId);
       const prefs = [...(selectedTimePrefs[requestedTopicId] || [])];
@@ -629,17 +664,23 @@
 
       setLoading(true);
 
-      const templateParams = {
+      const payload = {
         name,
-        from_email: email,
+        email,
         topic:     topic.name,
-        prefs:     prefs.length > 0 ? prefs.join(", ") : "No preference specified",
+        prefs:     prefs.length > 0 ? prefs : ["No preference specified"],
         note:      note.trim() || "None",
         timestamp: new Date().toLocaleString("en-US", { dateStyle:"full", timeStyle:"short" })
       };
 
       try {
-        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
+        const res = await fetch(PA_TIME_REQUEST_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) throw new Error("PA error " + res.status);
 
         document.getElementById("successTitle").textContent = "Request received!";
         document.getElementById("successDetail").innerHTML = `
@@ -658,17 +699,17 @@
           reqNote.style.display = "none";
         }
 
-        const emailNote = document.getElementById("emailSentNote");
-        document.getElementById("emailSentText").textContent = "A notification email has been sent to nathane.pieper@syngenta.com";
-        emailNote.style.display = "flex";
+        const savedNote = document.getElementById("emailSentNote");
+        document.getElementById("emailSentText").textContent = "Your request has been saved to the sign-up spreadsheet.";
+        savedNote.style.display = "flex";
 
         showSuccess();
 
       } catch (err) {
         setLoading(false);
         document.getElementById("sessionError").textContent =
-          "Email could not be sent — please try again or contact the organizer directly.";
-        console.error("EmailJS error:", err);
+          "Request could not be saved — please try again or contact the organizer directly.";
+        console.error("PA time request error:", err);
       }
     }
   }
