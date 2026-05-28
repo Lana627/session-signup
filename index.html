@@ -1,735 +1,662 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Session Sign-Up</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>August 26, 2026 - Breakout Session Sign-Up</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: #f0f4f8;
-      min-height: 100vh;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 40px 16px;
-    }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f4f8;
+            color: #333;
+            padding: 30px 20px;
+        }
 
-    .container {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
-      padding: 40px 36px;
-      max-width: 700px;
-      width: 100%;
-    }
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+        }
 
-    .header {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 8px;
-    }
+        .header {
+            background: linear-gradient(135deg, #005670, #00a651);
+            color: white;
+            padding: 30px;
+            border-radius: 12px 12px 0 0;
+            text-align: center;
+        }
 
-    .header-icon {
-      background: #005a2b;
-      border-radius: 10px;
-      width: 48px; height: 48px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
+        .header h1 { font-size: 1.8em; margin-bottom: 6px; }
+        .header p { font-size: 1em; opacity: 0.9; }
 
-    h1 { font-size: 1.55rem; color: #1a2e1a; font-weight: 700; }
+        .form-body {
+            background: white;
+            padding: 30px;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
 
-    .subtitle {
-      color: #556b55; font-size: 0.97rem;
-      margin-bottom: 28px; margin-top: 4px;
-    }
+        .section-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #005670;
+            margin: 24px 0 10px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 6px;
+        }
 
-    .form-group { margin-bottom: 20px; }
+        .form-group {
+            margin-bottom: 18px;
+        }
 
-    label {
-      display: block; font-weight: 600; color: #1a2e1a;
-      margin-bottom: 7px; font-size: 0.95rem;
-    }
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #444;
+        }
 
-    input[type="text"], input[type="email"], textarea {
-      width: 100%; padding: 10px 14px;
-      border: 1.5px solid #c8d8c8; border-radius: 7px;
-      font-size: 0.97rem; color: #1a2e1a; background: #f7faf7;
-      transition: border-color 0.2s; outline: none; font-family: inherit;
-    }
+        input[type="text"],
+        input[type="email"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 0.97em;
+            transition: border-color 0.2s;
+        }
 
-    input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
-      border-color: #005a2b; background: #fff;
-    }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #005670;
+        }
 
-    textarea { resize: vertical; min-height: 80px; }
+        .slot-block {
+            background: #f7fafc;
+            border: 1px solid #dce8ef;
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
 
-    .topic-group { margin-bottom: 18px; }
+        .slot-title {
+            font-weight: 600;
+            color: #005670;
+            font-size: 1em;
+            margin-bottom: 12px;
+        }
 
-    .topic-header {
-      display: flex; align-items: center;
-      justify-content: space-between; gap: 10px; margin-bottom: 8px;
-    }
+        .topic-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
 
-    .topic-name {
-      font-weight: 700; font-size: 1rem; color: #1a2e1a;
-      display: flex; align-items: center; gap: 8px;
-    }
+        .topic-option:hover:not(.full) { background: #eaf4f0; }
 
-    .topic-badge {
-      font-size: 0.75rem; font-weight: 700;
-      padding: 2px 9px; border-radius: 20px; white-space: nowrap;
-    }
+        .topic-option.selected {
+            background: #d4edda;
+            border-color: #00a651;
+        }
 
-    .badge-available { background: #e6f2e6; color: #005a2b; }
-    .badge-full      { background: #fdecea; color: #922b21; }
+        .topic-option.full {
+            background: #fff3f3;
+            border-color: #f5c6cb;
+            cursor: default;
+        }
 
-    .sessions-grid { display: flex; flex-direction: column; gap: 10px; }
+        .topic-option input[type="radio"] { margin-right: 10px; }
 
-    .session-card {
-      border: 1.5px solid #d4e4d4; border-radius: 9px;
-      padding: 12px 16px; cursor: pointer;
-      transition: border-color 0.18s, background 0.18s, box-shadow 0.18s;
-      position: relative; background: #f7faf7; user-select: none;
-    }
+        .topic-label { flex: 1; font-size: 0.95em; }
 
-    .session-card:hover:not(.full) {
-      border-color: #005a2b; background: #eef6ee;
-      box-shadow: 0 2px 10px rgba(0,90,43,0.08);
-    }
+        .capacity-badge {
+            font-size: 0.78em;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
 
-    .session-card.selected {
-      border-color: #005a2b; background: #e6f2e6;
-      box-shadow: 0 2px 10px rgba(0,90,43,0.13);
-    }
+        .capacity-badge.available {
+            background: #d4edda;
+            color: #155724;
+        }
 
-    .session-card.full {
-      opacity: 0.52; cursor: not-allowed; background: #f0f0f0; border-color: #ccc;
-    }
+        .capacity-badge.full {
+            background: #f8d7da;
+            color: #721c24;
+        }
 
-    .session-card input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+        .capacity-badge.almost {
+            background: #fff3cd;
+            color: #856404;
+        }
 
-    .session-top {
-      display: flex; align-items: center;
-      justify-content: space-between; gap: 10px;
-    }
+        .request-link {
+            display: inline-block;
+            margin-top: 4px;
+            font-size: 0.85em;
+            color: #005670;
+            text-decoration: underline;
+            cursor: pointer;
+        }
 
-    .session-left { display: flex; align-items: center; gap: 12px; }
+        .request-link:hover { color: #00a651; }
 
-    .radio-dot {
-      width: 18px; height: 18px; border-radius: 50%;
-      border: 2px solid #aac8aa; background: #fff;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; transition: border-color 0.18s, background 0.18s;
-    }
+        .request-form {
+            display: none;
+            background: #fffbea;
+            border: 1px solid #ffe082;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 10px;
+        }
 
-    .session-card.selected .radio-dot { border-color: #005a2b; background: #005a2b; }
+        .request-form.visible { display: block; }
 
-    .radio-dot-inner {
-      width: 8px; height: 8px; border-radius: 50%; background: #fff; display: none;
-    }
+        .request-form p {
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 12px;
+        }
 
-    .session-card.selected .radio-dot-inner { display: block; }
+        .request-form input, .request-form textarea {
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
 
-    .session-topic { font-weight: 700; color: #1a2e1a; font-size: 0.95rem; }
-    .session-time  { font-size: 0.86rem; color: #556b55; margin-top: 2px; }
+        .btn {
+            padding: 10px 22px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95em;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
 
-    .session-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+        .btn-primary {
+            background: #005670;
+            color: white;
+            width: 100%;
+            padding: 14px;
+            font-size: 1.05em;
+            margin-top: 10px;
+            border-radius: 8px;
+        }
 
-    .capacity-bar-wrap {
-      width: 110px; height: 6px; background: #d4e4d4; border-radius: 4px; overflow: hidden;
-    }
+        .btn-primary:hover { background: #00a651; }
 
-    .capacity-bar { height: 100%; border-radius: 4px; background: #005a2b; transition: width 0.3s; }
-    .capacity-bar.warning  { background: #e07c00; }
-    .capacity-bar.full-bar { background: #c0392b; }
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+            font-size: 0.85em;
+            padding: 7px 14px;
+        }
 
-    .capacity-text           { font-size: 0.80rem; color: #556b55; white-space: nowrap; }
-    .capacity-text.warning   { color: #e07c00; font-weight: 700; }
-    .capacity-text.full-text { color: #c0392b; font-weight: 700; }
+        .btn-secondary:hover { background: #c8c8c8; }
 
-    .alert-banner {
-      margin-top: 8px; padding: 7px 12px; border-radius: 6px;
-      font-size: 0.84rem; font-weight: 600;
-      display: flex; align-items: center; gap: 7px;
-    }
+        .btn-request {
+            background: #f39c12;
+            color: white;
+            font-size: 0.85em;
+            padding: 7px 14px;
+        }
 
-    .alert-warning { background: #fff4e0; color: #a05a00; border: 1px solid #f0c060; }
-    .alert-full    { background: #fdecea; color: #922b21; border: 1px solid #f5c6c3; }
+        .btn-request:hover { background: #d68910; }
 
-    /* Request more times */
-    .request-time-box {
-      margin-top: 10px; border: 1.5px dashed #c0392b;
-      border-radius: 9px; background: #fff8f8; overflow: hidden;
-    }
+        .error-msg {
+            color: #c0392b;
+            font-size: 0.85em;
+            margin-top: 4px;
+            display: none;
+        }
 
-    .request-time-trigger {
-      display: flex; align-items: center; gap: 10px;
-      padding: 11px 16px; cursor: pointer; user-select: none;
-    }
+        .success-box {
+            display: none;
+            background: #d4edda;
+            border: 1px solid #00a651;
+            border-radius: 10px;
+            padding: 24px;
+            text-align: center;
+            margin-top: 20px;
+        }
 
-    .request-time-trigger:hover { background: #fdecea; }
+        .success-box h2 { color: #005670; margin-bottom: 8px; }
+        .success-box p { color: #333; }
 
-    .request-time-trigger input[type="checkbox"] {
-      width: 16px; height: 16px; accent-color: #c0392b;
-      cursor: pointer; flex-shrink: 0;
-    }
+        .note {
+            font-size: 0.83em;
+            color: #888;
+            margin-top: 4px;
+        }
 
-    .request-time-label {
-      font-size: 0.9rem; font-weight: 600; color: #922b21;
-    }
-
-    .request-time-label span {
-      font-weight: 400; color: #a05a00; font-size: 0.83rem; margin-left: 6px;
-    }
-
-    .request-time-panel {
-      display: none; padding: 0 16px 14px; border-top: 1px solid #f5c6c3;
-    }
-
-    .request-time-panel.open { display: block; }
-
-    .request-time-panel label {
-      font-size: 0.88rem; font-weight: 600; color: #922b21;
-      margin-bottom: 6px; margin-top: 12px;
-    }
-
-    .time-prefs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
-
-    .time-pref-btn {
-      padding: 5px 14px; border-radius: 20px;
-      border: 1.5px solid #e0b0b0; background: #fff;
-      color: #922b21; font-size: 0.83rem; font-weight: 600;
-      cursor: pointer; transition: background 0.15s, border-color 0.15s; user-select: none;
-    }
-
-    .time-pref-btn.selected { background: #fdecea; border-color: #c0392b; }
-    .time-pref-btn:hover    { background: #fdecea; border-color: #c0392b; }
-
-    .request-note-label { color: #556b55 !important; font-weight: 600 !important; }
-
-    /* Buttons */
-    .btn-submit {
-      width: 100%; padding: 13px; background: #005a2b; color: #fff;
-      font-size: 1.05rem; font-weight: 700; border: none; border-radius: 8px;
-      cursor: pointer; margin-top: 10px;
-      transition: background 0.18s, transform 0.12s;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-    }
-
-    .btn-submit:hover   { background: #004020; }
-    .btn-submit:active  { transform: scale(0.98); }
-    .btn-submit:disabled { background: #aaa; cursor: not-allowed; }
-
-    .spinner {
-      width: 18px; height: 18px; border: 2.5px solid rgba(255,255,255,0.4);
-      border-top-color: #fff; border-radius: 50%;
-      animation: spin 0.7s linear infinite; display: none;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .error-msg { color: #c0392b; font-size: 0.85rem; margin-top: 5px; min-height: 18px; }
-
-    /* Success */
-    .success-screen { display: none; text-align: center; padding: 20px 0 10px; }
-
-    .success-icon {
-      width: 64px; height: 64px; background: #e6f2e6; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center; margin: 0 auto 18px;
-    }
-
-    .success-title { font-size: 1.4rem; font-weight: 700; color: #005a2b; margin-bottom: 10px; }
-    .success-detail { color: #556b55; font-size: 0.97rem; line-height: 1.7; }
-    .success-detail strong { color: #1a2e1a; }
-
-    .success-request-note {
-      margin-top: 14px; padding: 12px 16px;
-      background: #fff8f8; border: 1px solid #f5c6c3;
-      border-radius: 8px; font-size: 0.88rem; color: #922b21;
-      text-align: left; line-height: 1.5;
-    }
-
-    .email-sent-note {
-      margin-top: 10px; padding: 8px 14px;
-      background: #e6f2e6; border: 1px solid #b0d8b0;
-      border-radius: 7px; font-size: 0.84rem; color: #2d6a2d;
-      display: flex; align-items: center; gap: 7px;
-    }
-
-    .btn-another {
-      margin-top: 22px; padding: 10px 28px; background: #005a2b; color: #fff;
-      font-weight: 700; border: none; border-radius: 7px; cursor: pointer;
-      font-size: 0.97rem; transition: background 0.18s;
-    }
-
-    .btn-another:hover { background: #004020; }
-
-    .divider { border: none; border-top: 1.5px solid #e4eee4; margin: 24px 0; }
-
-    .reset-link {
-      font-size: 0.8rem; color: #aaa; cursor: pointer;
-      text-align: right; display: block; margin-top: 10px;
-    }
-
-    .reset-link:hover { color: #c0392b; text-decoration: underline; }
-  </style>
+        .slot-instruction {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
-
-  <div id="formSection">
     <div class="header">
-      <div class="header-icon">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-          <rect x="3" y="4" width="18" height="17" rx="2.5" stroke="#fff" stroke-width="2"/>
-          <path d="M8 2v4M16 2v4M3 9h18" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-          <path d="M8 13h4m-4 4h8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <h1>Session Sign-Up</h1>
-    </div>
-    <p class="subtitle">Register for one of the available sessions below. Each session is limited to <strong>25 participants</strong>.</p>
-
-    <div class="form-group">
-      <label for="fullName">Full Name</label>
-      <input type="text" id="fullName" placeholder="e.g. Jane Smith" autocomplete="name"/>
-      <div class="error-msg" id="nameError"></div>
+        <h1>Breakout Session Sign-Up</h1>
+        <p>August 26, 2026 &nbsp;|&nbsp; Select one topic per time slot</p>
     </div>
 
-    <div class="form-group">
-      <label for="email">Email Address</label>
-      <input type="email" id="email" placeholder="e.g. jane.smith@syngenta.com" autocomplete="email"/>
-      <div class="error-msg" id="emailError"></div>
-    </div>
+    <div class="form-body">
+        <form id="signupForm" onsubmit="submitForm(event)">
 
-    <hr class="divider"/>
+            <!-- Personal Info -->
+            <div class="section-title">Your Information</div>
 
-    <div class="form-group">
-      <label>Choose a Session</label>
-      <div id="topicGroupsContainer"></div>
-      <div class="error-msg" id="sessionError"></div>
-    </div>
+            <div class="form-group">
+                <label for="name">Full Name *</label>
+                <input type="text" id="name" placeholder="Enter your full name" required>
+                <div class="error-msg" id="nameError">Please enter your name.</div>
+            </div>
 
-    <button class="btn-submit" id="submitBtn" onclick="handleSubmit()">
-      <span id="btnText">Register Now</span>
-      <div class="spinner" id="btnSpinner"></div>
-    </button>
-    <span class="reset-link" onclick="resetCounts()">Reset all counts (admin)</span>
-  </div>
+            <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" placeholder="Enter your email address" required>
+                <div class="error-msg" id="emailError">Please enter a valid email.</div>
+            </div>
 
-  <!-- Success Screen -->
-  <div class="success-screen" id="successSection">
-    <div class="success-icon">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-        <circle cx="12" cy="12" r="10" stroke="#005a2b" stroke-width="2"/>
-        <path d="M7.5 12.5l3 3 6-6" stroke="#005a2b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+            <!-- Time Slots -->
+            <div class="section-title">Breakout Sessions</div>
+            <p class="note" style="margin-bottom:16px;">Each session has a capacity of 25 participants. Select one topic per time slot. All selections are optional — choose only the sessions you plan to attend.</p>
+
+            <!-- Slot 1 -->
+            <div class="slot-block">
+                <div class="slot-title">🕙 10:15 AM – 11:00 AM</div>
+                <div class="slot-instruction">Select one breakout topic for this session:</div>
+                <div id="slot1-topics">
+                    <div class="topic-option" onclick="selectTopic(this, 'slot1', 'Next Level of Agronomy')">
+                        <input type="radio" name="slot1" value="Next Level of Agronomy"> 
+                        <span class="topic-label">Breakouts- Next Level of Agronomy</span>
+                        <span class="capacity-badge available" id="badge-slot1-0">25 left</span>
+                    </div>
+                    <div class="topic-option" onclick="selectTopic(this, 'slot1', 'Drone- new development')">
+                        <input type="radio" name="slot1" value="Drone- new development"> 
+                        <span class="topic-label">Breakouts- Drone- new development</span>
+                        <span class="capacity-badge available" id="badge-slot1-1">25 left</span>
+                    </div>
+                    <div class="topic-option" onclick="selectTopic(this, 'slot1', 'TOPS- trialing')">
+                        <input type="radio" name="slot1" value="TOPS- trialing"> 
+                        <span class="topic-label">Breakouts- TOPS- trialing</span>
+                        <span class="capacity-badge available" id="badge-slot1-2">25 left</span>
+                    </div>
+                    <div class="topic-option" onclick="selectTopic(this, 'slot1', 'How do you do a management of change')">
+                        <input type="radio" name="slot1" value="How do you do a management of change"> 
+                        <span class="topic-label">Breakouts- How do you do a management of change</span>
+                        <span class="capacity-badge available" id="badge-slot1-3">25 left</span>
+                    </div>
+                    <div class="topic-option" onclick="selectTopic(this, 'slot1', 'Tissue sampling')">
+                        <input type="radio" name="slot1" value="Tissue sampling"> 
+                        <span class="topic-label">Breakouts- Tissue sampling</span>
+                        <span class="capacity-badge available" id="badge-slot1-4">25 left</span>
+                    </div>
+                    <div class="topic-option" onclick="selectTopic(this, 'slot1', 'Pollination GDD')">
+                        <input type="radio" name="slot1" value="Pollination GDD"> 
+                        <span class="topic-label">Breakouts- Pollination GDD</span>
+                        <span class="capacity-badge available" id="badge-slot1-5">25 left</span>
+                    </div>
+                </div>
+                <span class="request-link" onclick="toggleRequest('request-slot1')">⚠ Need a different time or topic? Request here</span>
+                <div class="request-form" id="request-slot1">
+                    <p>All spots for your preferred topic are full, or you need a different option. Let us know what you need and we'll follow up.</p>
+                    <input type="text" id="req-slot1-name" placeholder="Your name (if different from above)">
+                    <input type="email" id="req-slot1-email" placeholder="Your email (if different from above)">
+                    <textarea id="req-slot1-msg" rows="3" placeholder="Which topic or time would you prefer? Any additional details..."></textarea>
+                    <button type="button" class="btn btn-request" onclick="submitRequest('slot1', '10:15 AM - 11:00 AM')">Submit Request</button>
+                    <button type="button" class="btn btn-secondary" onclick="toggleRequest('request-slot1')" style="margin-left:8px;">Cancel</button>
+                    <div id="req-slot1-confirm" style="display:none; color:#27ae60; margin-top:8px; font-size:0.9em;">✔ Request submitted! We'll be in touch.</div>
+                </div>
+            </div>
+
+            <!-- Slot 2 -->
+            <div class="slot-block">
+                <div class="slot-title">🕙 11:10 AM – 11:50 AM</div>
+                <div class="slot-instruction">Select one breakout topic for this session:</div>
+                <div id="slot2-topics">
+                    <div class="topic-option" onclick="selectTopic(this, 'slot2', 'Next Level of Agronomy')">
+                        <input type="radio" name="slot2" value="Next Level of Agronomy"> 
+                        <span class="topic-label">Breakouts- Next Level of Agronomy</span>
+                        <span class="capacity-badge available" id="badge-slot2-0">25 left</span>
+                    </div>
+                    <div class="topic-option" onclick="selectTopic(this, 'slot2', 'Drone- new development')">
+                        <input type="radio" name="slot2" value="Drone- new development"> 
+                        <span class="topic-label">Breakouts- Drone- new development</span>
+                        <span class="capacity-badge available" id="badge-slot2-1">25 left</span>
+                    </div>
+                    <div class="topic-option" onclick="selectTopic(this, 'slot2', 'TOPS- trialing')">
+                        <input type="radio" name="slot2" value="TOPS- trialing"> 
+                        <span class="topic-label">Breakouts- TOPS- trialing</span>
+                        <span class="capacity-badge available" id="badge-slot2-2">25 left</span>
+                    </div>
+                    <div class="topic-option" onclick="selectTopic(this, 'slot2', 'How do you do a management of change')">
+                        <input type="radio" name="slot2" value="How do you do a management of change"> 
+                        <span class="topic-label">Breakouts- How do you do a management of change</span>
+                        <span class="capacity-badge available" id="badge-slot2-3">25 left</span>
+                    </div>
+                    <div class="topic-option" onclick="selectTopic(this, 'slot2', 'Tissue sampling')">
+                        <input type="radio" name="slot2" value="Tissue sampling"> 
+                        <span class="topic-label">Breakouts- Tissue sampling</span>
+                        <span class="capacity-badge available" id="badge-slot2-4">25 left</span>
+                    </div>
+                    <div class="topic-option" onclick="selectTopic(this, 'slot2', 'Shipping Standards')">
+                        <input type="radio" name="slot2" value="Shipping Standards"> 
+                        <span class="topic-label">Breakouts- Shipping Standards</span>
+                        <span class="capacity-badge available" id="badge-slot2-5">25 left</span>
+                    </div>
+                </div>
+                <span class="request-link" onclick="toggleRequest('request-slot2')">⚠ Need a different time or topic? Request here</span>
+                <div class="request-form" id="request-slot2">
+                    <p>All spots for your preferred topic are full, or you need a different option. Let us know what you need and we'll follow up.</p>
+                    <input type="text" id="req-slot2-name" placeholder="Your name (if different from above)">
+                    <input type="email" id="req-slot2-email" placeholder="Your email (if different from above)">
+                    <textarea id="req-slot2-msg" rows="3" placeholder="Which topic or time would you prefer? Any additional details..."></textarea>
+                    <button type="button" class="btn btn-request" onclick="submitRequest('slot2', '11:10 AM - 11:50 AM')">Submit Request</button>
+                    <button type="button" class="btn btn-secondary" onclick="toggleRequest('request-slot2')" style="margin-left:8px;">Cancel</button>
+                    <div id="req-slot2-confirm" style="display:none; color:#27ae60; margin-top:8px; font-size:0.9em;">✔ Request submitted! We'll be in touch.</div>
+                </div>
+            </div>
+
+            <!-- Slot 3 -->
+            <div class="slot-block">
+                <div class="slot-title">🕐 1:00 PM – 1:45 PM</div>
+                <div class="slot-instruction">Select one breakout topic for this session:</div>
+                <div id="slot3-topics">
+                    <div class="topic-option" onclick="selectTopic(this, 'slot3', 'Next Level of Agronomy')">
+                        <input type="radio" name="slot3" value="Next Level of Agronomy"> 
+                        <span class="topic-label">Breakouts- Next Level of Agronomy</span>
+                        <span class="capacity-badge available" id="badge-slot3-0">25 left</span>
+                    </div>
+                    <div class="topic-option" onclick="selectTopic(this, 'slot3', 'Drone- new development')">
+                        <input type="radio" name="slot3" value="Drone- new development"> 
+                        <span class="topic-label">Breakouts- Drone- new development</span>
+                        <span class="capacity-badge available" id="badge-slot3-1">25 left</span>
+                    </div>
+                    <div class="topic-option" onclick="selectTopic(this, 'slot3', 'TOPS- trialing')">
+                        <input type="radio" name="slot3" value="TOPS- trialing"> 
+                        <span class="topic-label">Breakouts- TOPS- trialing</span>
+                        <span class="capacity-badge available" id="badge-slot3-2">25 left</span>
+                    </div>
+                    <div class="topic-option" onclick="selectTopic(this, 'slot3', 'How do you do a management of change')">
+                        <input type="radio" name="slot3" value="How do you do a management of change"> 
+                        <span class="topic-label">Breakouts- How do you do a management of change</span>
+                        <span class="capacity-badge available" id="badge-slot3-3">25 left</span>
+                    </div>
+                    <div class="topic-option" onclick="selectTopic(this, 'slot3', 'Pollination GDD')">
+                        <input type="radio" name="slot3" value="Pollination GDD"> 
+                        <span class="topic-label">Breakouts- Pollination GDD</span>
+                        <span class="capacity-badge available" id="badge-slot3-4">25 left</span>
+                    </div>
+                    <div class="topic-option" onclick="selectTopic(this, 'slot3', 'Shipping Standards')">
+                        <input type="radio" name="slot3" value="Shipping Standards"> 
+                        <span class="topic-label">Breakouts- Shipping Standards</span>
+                        <span class="capacity-badge available" id="badge-slot3-5">25 left</span>
+                    </div>
+                </div>
+                <span class="request-link" onclick="toggleRequest('request-slot3')">⚠ Need a different time or topic? Request here</span>
+                <div class="request-form" id="request-slot3">
+                    <p>All spots for your preferred topic are full, or you need a different option. Let us know what you need and we'll follow up.</p>
+                    <input type="text" id="req-slot3-name" placeholder="Your name (if different from above)">
+                    <input type="email" id="req-slot3-email" placeholder="Your email (if different from above)">
+                    <textarea id="req-slot3-msg" rows="3" placeholder="Which topic or time would you prefer? Any additional details..."></textarea>
+                    <button type="button" class="btn btn-request" onclick="submitRequest('slot3', '1:00 PM - 1:45 PM')">Submit Request</button>
+                    <button type="button" class="btn btn-secondary" onclick="toggleRequest('request-slot3')" style="margin-left:8px;">Cancel</button>
+                    <div id="req-slot3-confirm" style="display:none; color:#27ae60; margin-top:8px; font-size:0.9em;">✔ Request submitted! We'll be in touch.</div>
+                </div>
+            </div>
+
+            <!-- Slot 4 -->
+            <div class="slot-block">
+                <div class="slot-title">🕑 1:55 PM – 2:40 PM</div>
+                <div class="slot-instruction">Select one breakout topic for this session:</div>
+                <div id="slot4-topics">
+                    <div class="topic-option" onclick="selectTopic(this, 'slot4', 'Learning Academy')">
+                        <input type="radio" name="slot4" value="Learning Academy"> 
+                        <span class="topic-label">Breakouts- Learning Academy</span>
+                        <span class="capacity-badge available" id="badge-slot4-0">25 left</span>
+                    </div>
+                    <div class="topic-option" onclick="selectTopic(this, 'slot4', 'TOPS- Nursery')">
+                        <input type="radio" name="slot4" value="TOPS- Nursery"> 
+                        <span class="topic-label">Breakouts- TOPS- Nursery</span>
+                        <span class="capacity-badge available" id="badge-slot4-1">25 left</span>
+                    </div>
+                    <div class="topic-option" onclick="selectTopic(this, 'slot4', 'Enaboln')">
+                        <input type="radio" name="slot4" value="Enaboln"> 
+                        <span class="topic-label">Breakouts- Enaboln</span>
+                        <span class="capacity-badge available" id="badge-slot4-2">25 left</span>
+                    </div>
+                    <div class="topic-option" onclick="selectTopic(this, 'slot4', 'How to write a non conformity')">
+                        <input type="radio" name="slot4" value="How to write a non conformity"> 
+                        <span class="topic-label">Breakouts- How to write a non conformity</span>
+                        <span class="capacity-badge available" id="badge-slot4-3">25 left</span>
+                    </div>
+                    <div class="topic-option" onclick="selectTopic(this, 'slot4', 'Trialing Harvest Prep')">
+                        <input type="radio" name="slot4" value="Trialing Harvest Prep"> 
+                        <span class="topic-label">Breakouts- Trialing Harvest Prep</span>
+                        <span class="capacity-badge available" id="badge-slot4-4">25 left</span>
+                    </div>
+                    <div class="topic-option" onclick="selectTopic(this, 'slot4', 'OPS equipment')">
+                        <input type="radio" name="slot4" value="OPS equipment"> 
+                        <span class="topic-label">Breakouts- OPS equipment</span>
+                        <span class="capacity-badge available" id="badge-slot4-5">25 left</span>
+                    </div>
+                </div>
+                <span class="request-link" onclick="toggleRequest('request-slot4')">⚠ Need a different time or topic? Request here</span>
+                <div class="request-form" id="request-slot4">
+                    <p>All spots for your preferred topic are full, or you need a different option. Let us know what you need and we'll follow up.</p>
+                    <input type="text" id="req-slot4-name" placeholder="Your name (if different from above)">
+                    <input type="email" id="req-slot4-email" placeholder="Your email (if different from above)">
+                    <textarea id="req-slot4-msg" rows="3" placeholder="Which topic or time would you prefer? Any additional details..."></textarea>
+                    <button type="button" class="btn btn-request" onclick="submitRequest('slot4', '1:55 PM - 2:40 PM')">Submit Request</button>
+                    <button type="button" class="btn btn-secondary" onclick="toggleRequest('request-slot4')" style="margin-left:8px;">Cancel</button>
+                    <div id="req-slot4-confirm" style="display:none; color:#27ae60; margin-top:8px; font-size:0.9em;">✔ Request submitted! We'll be in touch.</div>
+                </div>
+            </div>
+
+            <!-- Slot 5 -->
+            <div class="slot-block">
+                <div class="slot-title">🕒 2:55 PM – 3:40 PM</div>
+                <div class="slot-instruction">Select one breakout topic for this session:</div>
+                <div id="slot5-topics">
+                    <div class="topic-option" onclick="selectTopic(this, 'slot5', 'How do we launch products?')">
+                        <input type="radio" name="slot5" value="How do we launch products?"> 
+                        <span class="topic-label">Breakouts- How do we launch products?</span>
+                        <span class="capacity-badge available" id="badge-slot5-0">25 left</span>
+                    </div>
+                    <div class="topic-option" onclick="selectTopic(this, 'slot5', 'TOPS- Nursery')">
+                        <input type="radio" name="slot5" value="TOPS- Nursery"> 
+                        <span class="topic-label">Breakouts- TOPS- Nursery</span>
+                        <span class="capacity-badge available" id="badge-slot5-1">25 left</span>
+                    </div>
+                    <div class="topic-option" onclick="selectTopic(this, 'slot5', 'Enaboln')">
+                        <input type="radio" name="slot5" value="Enaboln"> 
+                        <span class="topic-label">Breakouts- Enaboln</span>
+                        <span class="capacity-badge available" id="badge-slot5-2">25 left</span>
+                    </div>
+                    <div class="topic-option" onclick="selectTopic(this, 'slot5', 'How to write a non conformity')">
+                        <input type="radio" name="slot5" value="How to write a non conformity"> 
+                        <span class="topic-label">Breakouts- How to write a non conformity</span>
+                        <span class="capacity-badge available" id="badge-slot5-3">25 left</span>
+                    </div>
+                    <div class="topic-option" onclick="selectTopic(this, 'slot5', 'Trialing Harvest Prep')">
+                        <input type="radio" name="slot5" value="Trialing Harvest Prep"> 
+                        <span class="topic-label">Breakouts- Trialing Harvest Prep</span>
+                        <span class="capacity-badge available" id="badge-slot5-4">25 left</span>
+                    </div>
+                    <div class="topic-option" onclick="selectTopic(this, 'slot5', 'OPS equipment')">
+                        <input type="radio" name="slot5" value="OPS equipment"> 
+                        <span class="topic-label">Breakouts- OPS equipment</span>
+                        <span class="capacity-badge available" id="badge-slot5-5">25 left</span>
+                    </div>
+                </div>
+                <span class="request-link" onclick="toggleRequest('request-slot5')">⚠ Need a different time or topic? Request here</span>
+                <div class="request-form" id="request-slot5">
+                    <p>All spots for your preferred topic are full, or you need a different option. Let us know what you need and we'll follow up.</p>
+                    <input type="text" id="req-slot5-name" placeholder="Your name (if different from above)">
+                    <input type="email" id="req-slot5-email" placeholder="Your email (if different from above)">
+                    <textarea id="req-slot5-msg" rows="3" placeholder="Which topic or time would you prefer? Any additional details..."></textarea>
+                    <button type="button" class="btn btn-request" onclick="submitRequest('slot5', '2:55 PM - 3:40 PM')">Submit Request</button>
+                    <button type="button" class="btn btn-secondary" onclick="toggleRequest('request-slot5')" style="margin-left:8px;">Cancel</button>
+                    <div id="req-slot5-confirm" style="display:none; color:#27ae60; margin-top:8px; font-size:0.9em;">✔ Request submitted! We'll be in touch.</div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit Sign-Up</button>
+        </form>
+
+        <div class="success-box" id="successBox">
+            <h2>✔ You're signed up!</h2>
+            <p>Thank you for registering for the August 26, 2026 Breakout Sessions.<br>A confirmation will be sent to your email address.</p>
+        </div>
     </div>
-    <div class="success-title" id="successTitle">You're registered!</div>
-    <div class="success-detail" id="successDetail"></div>
-    <div class="success-request-note" id="successRequestNote" style="display:none;"></div>
-    <div class="email-sent-note" id="emailSentNote" style="display:none;">
-      <svg width="15" height="15" viewBox="0 0 20 20" fill="none">
-        <path d="M2 5l8 5 8-5M2 5h16v11a1 1 0 01-1 1H3a1 1 0 01-1-1V5z" stroke="#2d6a2d" stroke-width="1.8" stroke-linecap="round"/>
-      </svg>
-      <span id="emailSentText"></span>
-    </div>
-    <button class="btn-another" onclick="registerAnother()">Register Another Person</button>
-  </div>
 </div>
 
 <script>
-  // ── Power Automate URLs ─────────────────────────────────────────────
-  const PA_REGISTRATION_URL = "https://default06219a4aa83544d5afaf3926343bfb.89.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/fa5ab4e0beb24b879228d584b064e6ea/triggers/manual/paths/invoke?api-version=1";
-  const PA_TIME_REQUEST_URL = "https://default06219a4aa83544d5afaf3926343bfb.89.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/ad8dce6dfc4e4d2f944cbaf9baac2360/triggers/manual/paths/invoke?api-version=1";
-  // ───────────────────────────────────────────────────────────────────
+    // Power Automate Flow URLs
+    const SIGNUP_URL = 'https://default06219a4aa83544d5afaf3926343bfb.89.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/0703cff8078e46598d541843a50bde22/triggers/manual/paths/invoke?api-version=1';
+    const REQUEST_URL = 'https://default06219a4aa83544d5afaf3926343bfb.89.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/a13d552a61ba4fbdb2f9a89af4930378/triggers/manual/paths/invoke?api-version=1';
 
-  // ── EmailJS config (used only for time requests until PA flow is set up) ──
-  const EMAILJS_PUBLIC_KEY  = "V1zqyUhyw-7Pa8w2v";
-  const EMAILJS_SERVICE_ID  = "service_3vz79x3";
-  const EMAILJS_TEMPLATE_ID = "template_5rooetf";
-  // ───────────────────────────────────────────────────────────────────
+    const slotLabels = {
+        slot1: '10:15 AM - 11:00 AM',
+        slot2: '11:10 AM - 11:50 AM',
+        slot3: '1:00 PM - 1:45 PM',
+        slot4: '1:55 PM - 2:40 PM',
+        slot5: '2:55 PM - 3:40 PM'
+    };
 
-
-  const MAX    = 25;
-  const WARN_AT = 20;
-
-  // ── Edit sessions here ──────────────────────────────────────────────
-  const TOPICS = [
-    {
-      id: "t1",
-      name: "Introduction to SAP S/4HANA",
-      sessions: [
-        { id: "s1", time: "Monday, June 2 · 9:00 AM – 10:00 AM" },
-        { id: "s2", time: "Monday, June 2 · 1:00 PM – 2:00 PM" },
-      ]
-    },
-    {
-      id: "t2",
-      name: "Data Management Best Practices",
-      sessions: [
-        { id: "s3", time: "Tuesday, June 3 · 10:00 AM – 11:00 AM" },
-        { id: "s4", time: "Tuesday, June 3 · 2:00 PM – 3:00 PM" },
-      ]
-    },
-    {
-      id: "t3",
-      name: "Reporting & Analytics Overview",
-      sessions: [
-        { id: "s5", time: "Wednesday, June 4 · 9:00 AM – 10:00 AM" },
-        { id: "s6", time: "Wednesday, June 4 · 3:00 PM – 4:00 PM" },
-      ]
+    function selectTopic(el, slotKey, topic) {
+        if (el.classList.contains('full')) return;
+        const container = document.getElementById(slotKey + '-topics');
+        const allOptions = container.querySelectorAll('.topic-option');
+        const radio = el.querySelector('input[type="radio"]');
+        allOptions.forEach(opt => opt.classList.remove('selected'));
+        el.classList.add('selected');
+        radio.checked = true;
     }
-  ];
 
-  const TIME_PREF_OPTIONS = ["Morning (8 AM–12 PM)", "Afternoon (12–4 PM)", "Late Afternoon (4–6 PM)", "Any time"];
-  // ───────────────────────────────────────────────────────────────────
+    function toggleRequest(id) {
+        const el = document.getElementById(id);
+        el.classList.toggle('visible');
+    }
 
-  let selectedSession   = null;
-  let requestedTopicId  = null;
-  let selectedTimePrefs = {};
+    function submitRequest(slotKey, slotLabel) {
+        const mainName = document.getElementById('name').value.trim();
+        const mainEmail = document.getElementById('email').value.trim();
+        const nameVal = document.getElementById('req-' + slotKey + '-name').value.trim() || mainName;
+        const emailVal = document.getElementById('req-' + slotKey + '-email').value.trim() || mainEmail;
+        const msgVal = document.getElementById('req-' + slotKey + '-msg').value.trim();
 
-  function getCounts()    { return JSON.parse(localStorage.getItem("sessionCounts") || "{}"); }
-  function saveCounts(c)  { localStorage.setItem("sessionCounts", JSON.stringify(c)); }
-  function getCount(id)   { return getCounts()[id] || 0; }
-  function incrementCount(id) { const c = getCounts(); c[id] = (c[id]||0)+1; saveCounts(c); }
-
-  function resetCounts() {
-    if (!confirm("Reset all session counts? (Admin only)")) return;
-    localStorage.removeItem("sessionCounts");
-    renderTopics();
-  }
-
-  function isTopicFull(topic) {
-    return topic.sessions.every(s => getCount(s.id) >= MAX);
-  }
-
-  function renderTopics() {
-    selectedSession   = null;
-    requestedTopicId  = null;
-    selectedTimePrefs = {};
-
-    const container = document.getElementById("topicGroupsContainer");
-    container.innerHTML = "";
-
-    TOPICS.forEach(topic => {
-      const topicFull = isTopicFull(topic);
-      const group = document.createElement("div");
-      group.className = "topic-group";
-
-      const header = document.createElement("div");
-      header.className = "topic-header";
-      header.innerHTML = `
-        <div class="topic-name">
-          <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-            <rect x="2" y="3" width="16" height="14" rx="2" stroke="${topicFull ? "#c0392b" : "#005a2b"}" stroke-width="1.8"/>
-            <path d="M6 7h8M6 10h6M6 13h4" stroke="${topicFull ? "#c0392b" : "#005a2b"}" stroke-width="1.6" stroke-linecap="round"/>
-          </svg>
-          ${topic.name}
-        </div>
-        <span class="topic-badge ${topicFull ? "badge-full" : "badge-available"}">
-          ${topicFull ? "All sessions full" : "Spots available"}
-        </span>`;
-      group.appendChild(header);
-
-      const grid = document.createElement("div");
-      grid.className = "sessions-grid";
-
-      topic.sessions.forEach(s => {
-        const count     = getCount(s.id);
-        const isFull    = count >= MAX;
-        const isWarn    = count >= WARN_AT && !isFull;
-        const remaining = MAX - count;
-        const pct       = Math.min(100, Math.round((count / MAX) * 100));
-
-        const card = document.createElement("label");
-        card.className = "session-card" + (isFull ? " full" : "");
-        card.htmlFor   = "radio_" + s.id;
-        card.id        = "card_" + s.id;
-
-        const barClass  = isFull ? "capacity-bar full-bar" : isWarn ? "capacity-bar warning" : "capacity-bar";
-        const textClass = isFull ? "capacity-text full-text" : isWarn ? "capacity-text warning" : "capacity-text";
-        const textLabel = isFull ? "Full" : `${count} / ${MAX} registered`;
-
-        let alertHtml = "";
-        if (isFull) {
-          alertHtml = `<div class="alert-banner alert-full">
-            <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#922b21" stroke-width="2"/><path d="M10 6v5M10 14v.5" stroke="#922b21" stroke-width="2" stroke-linecap="round"/></svg>
-            This session is full — no spots remaining.</div>`;
-        } else if (isWarn) {
-          alertHtml = `<div class="alert-banner alert-warning">
-            <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><path d="M9.134 3.37L2.084 15.5A1 1 0 003 17h14a1 1 0 00.866-1.5L10.866 3.37a1 1 0 00-1.732 0z" stroke="#a05a00" stroke-width="1.8"/><path d="M10 8v4M10 14v.5" stroke="#a05a00" stroke-width="1.8" stroke-linecap="round"/></svg>
-            Almost full — only <strong>${remaining} spot${remaining===1?"":"s"}</strong> left!</div>`;
+        if (!msgVal) {
+            alert('Please describe what you need before submitting.');
+            return;
         }
 
-        card.innerHTML = `
-          <input type="radio" name="session" id="radio_${s.id}" value="${s.id}" ${isFull?"disabled":""}/>
-          <div class="session-top">
-            <div class="session-left">
-              <div class="radio-dot"><div class="radio-dot-inner"></div></div>
-              <div class="session-info">
-                <div class="session-topic">${topic.name}</div>
-                <div class="session-time">${s.time}</div>
-              </div>
-            </div>
-            <div class="session-right">
-              <div class="${textClass}">${textLabel}</div>
-              <div class="capacity-bar-wrap">
-                <div class="${barClass}" style="width:${pct}%"></div>
-              </div>
-            </div>
-          </div>${alertHtml}`;
+        // Get selected topic for this slot if any
+        let selectedTopic = '';
+        const radios = document.querySelectorAll(`input[name="${slotKey}"]`);
+        radios.forEach(r => { if (r.checked) selectedTopic = r.value; });
 
-        if (!isFull) {
-          card.addEventListener("click", () => {
-            document.querySelectorAll(".session-card").forEach(c => c.classList.remove("selected"));
-            card.classList.add("selected");
-            selectedSession  = s.id;
-            requestedTopicId = null;
-            // uncheck any request boxes
-            document.querySelectorAll("[id^='reqCheck_']").forEach(cb => {
-              cb.checked = false;
-              const panel = document.getElementById("reqPanel_" + cb.id.replace("reqCheck_",""));
-              if (panel) panel.classList.remove("open");
-            });
-            requestedTopicId = null;
-            document.getElementById("sessionError").textContent = "";
-          });
-        }
+        const payload = {
+            name: nameVal,
+            email: emailVal,
+            timeSlot: slotLabel,
+            requestedTopic: selectedTopic || 'Not specified',
+            notes: msgVal,
+            timestamp: new Date().toISOString()
+        };
 
-        grid.appendChild(card);
-      });
-
-      group.appendChild(grid);
-
-      if (topicFull) {
-        selectedTimePrefs[topic.id] = new Set();
-        const reqBox = document.createElement("div");
-        reqBox.className = "request-time-box";
-        reqBox.id = "reqBox_" + topic.id;
-        const cbId = "reqCheck_" + topic.id;
-
-        reqBox.innerHTML = `
-          <div class="request-time-trigger" onclick="toggleRequestPanel('${topic.id}')">
-            <input type="checkbox" id="${cbId}" onclick="event.stopPropagation();toggleRequestPanel('${topic.id}')"/>
-            <div class="request-time-label">
-              Request additional time slots for this topic
-              <span>— We'll reach out if a new session is added</span>
-            </div>
-          </div>
-          <div class="request-time-panel" id="reqPanel_${topic.id}">
-            <label>Preferred times <span style="font-weight:400;color:#888;">(select all that apply)</span></label>
-            <div class="time-prefs" id="timePrefs_${topic.id}"></div>
-            <label class="request-note-label" style="margin-top:14px;">Additional notes <span style="font-weight:400;color:#888;">(optional)</span></label>
-            <textarea id="reqNote_${topic.id}" placeholder="e.g. Any Friday morning slot would work great..." rows="2"></textarea>
-          </div>`;
-
-        group.appendChild(reqBox);
-
-        setTimeout(() => {
-          const prefsContainer = document.getElementById("timePrefs_" + topic.id);
-          if (!prefsContainer) return;
-          TIME_PREF_OPTIONS.forEach(opt => {
-            const btn = document.createElement("div");
-            btn.className = "time-pref-btn";
-            btn.textContent = opt;
-            btn.onclick = () => {
-              const set = selectedTimePrefs[topic.id];
-              if (set.has(opt)) { set.delete(opt); btn.classList.remove("selected"); }
-              else              { set.add(opt);    btn.classList.add("selected"); }
-            };
-            prefsContainer.appendChild(btn);
-          });
-        }, 0);
-      }
-
-      container.appendChild(group);
-    });
-  }
-
-  function toggleRequestPanel(topicId) {
-    const checkbox = document.getElementById("reqCheck_" + topicId);
-    const panel    = document.getElementById("reqPanel_" + topicId);
-    checkbox.checked = !checkbox.checked;
-    panel.classList.toggle("open", checkbox.checked);
-
-    if (checkbox.checked) {
-      requestedTopicId = topicId;
-      selectedSession  = null;
-      document.querySelectorAll(".session-card").forEach(c => c.classList.remove("selected"));
-      document.getElementById("sessionError").textContent = "";
-    } else {
-      if (requestedTopicId === topicId) requestedTopicId = null;
-    }
-  }
-
-  function setLoading(loading) {
-    const btn     = document.getElementById("submitBtn");
-    const txt     = document.getElementById("btnText");
-    const spinner = document.getElementById("btnSpinner");
-    btn.disabled        = loading;
-    txt.textContent     = loading ? "Sending..." : (requestedTopicId ? "Submit Request" : "Register Now");
-    spinner.style.display = loading ? "block" : "none";
-  }
-
-  async function handleSubmit() {
-    let valid = true;
-    const name  = document.getElementById("fullName").value.trim();
-    const email = document.getElementById("email").value.trim();
-
-    document.getElementById("nameError").textContent    = "";
-    document.getElementById("emailError").textContent   = "";
-    document.getElementById("sessionError").textContent = "";
-
-    if (!name) { document.getElementById("nameError").textContent = "Please enter your full name."; valid = false; }
-    if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-      document.getElementById("emailError").textContent = "Please enter a valid email address."; valid = false;
-    }
-    if (!selectedSession && !requestedTopicId) {
-      document.getElementById("sessionError").textContent = "Please select a session or request additional times for a full topic.";
-      valid = false;
-    }
-    if (!valid) return;
-
-    // ── Path A: Normal registration → POST to Power Automate ──
-    if (selectedSession) {
-      const count = getCount(selectedSession);
-      if (count >= MAX) {
-        document.getElementById("sessionError").textContent = "This session just filled up. Please choose another.";
-        renderTopics(); return;
-      }
-
-      const allSessions = TOPICS.flatMap(t => t.sessions);
-      const session     = allSessions.find(s => s.id === selectedSession);
-      const topic       = TOPICS.find(t => t.sessions.some(s => s.id === selectedSession));
-
-      setLoading(true);
-
-      const payload = {
-        name,
-        email,
-        topic:     topic.name,
-        timeslot:  session.time,
-        timestamp: new Date().toLocaleString("en-US", { dateStyle:"full", timeStyle:"short" })
-      };
-
-      try {
-        const res = await fetch(PA_REGISTRATION_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
+        fetch(REQUEST_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        }).then(() => {
+            document.getElementById('req-' + slotKey + '-confirm').style.display = 'block';
+            document.getElementById('req-' + slotKey + '-name').disabled = true;
+            document.getElementById('req-' + slotKey + '-email').disabled = true;
+            document.getElementById('req-' + slotKey + '-msg').disabled = true;
+        }).catch(err => {
+            console.error('Request submission error:', err);
+            alert('There was an issue submitting your request. Please try again.');
         });
+    }
 
-        if (!res.ok) throw new Error("PA error " + res.status);
+    async function submitForm(e) {
+        e.preventDefault();
 
-        // Only increment local count after successful save
-        incrementCount(selectedSession);
-        const remaining = MAX - getCount(selectedSession);
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
 
-        let spotsNote = "";
-        if (remaining === 0) spotsNote = "<br/><em style='color:#c0392b;font-size:0.88rem;'>You took the last spot — this session is now full.</em>";
-        else if (remaining <= 5) spotsNote = `<br/><em style='color:#e07c00;font-size:0.88rem;'>${remaining} spot${remaining===1?"":"s"} remaining after your registration.</em>`;
+        let valid = true;
 
-        document.getElementById("successTitle").textContent = "You're registered!";
-        document.getElementById("successDetail").innerHTML = `
-          <strong>${name}</strong>, you're confirmed for:<br/>
-          <strong style="color:#005a2b;">${topic.name}</strong><br/>
-          <span style="color:#556b55;">${session.time}</span><br/>
-          Confirmation noted for <strong>${email}</strong>.${spotsNote}`;
-        document.getElementById("successRequestNote").style.display = "none";
-
-        const emailNote = document.getElementById("emailSentNote");
-        document.getElementById("emailSentText").textContent = "Your registration has been saved to the sign-up spreadsheet.";
-        emailNote.style.display = "flex";
-
-        showSuccess();
-
-      } catch (err) {
-        setLoading(false);
-        document.getElementById("sessionError").textContent =
-          "Registration could not be saved — please try again or contact the organizer directly.";
-        console.error("PA registration error:", err);
-      }
-
-    // ── Path B: Request additional times → POST to Power Automate ──
-    } else {
-      const topic = TOPICS.find(t => t.id === requestedTopicId);
-      const prefs = [...(selectedTimePrefs[requestedTopicId] || [])];
-      const note  = (document.getElementById("reqNote_" + requestedTopicId)||{}).value || "";
-
-      setLoading(true);
-
-      const payload = {
-        name,
-        email,
-        topic:     topic.name,
-        prefs:     prefs.length > 0 ? prefs : ["No preference specified"],
-        note:      note.trim() || "None",
-        timestamp: new Date().toLocaleString("en-US", { dateStyle:"full", timeStyle:"short" })
-      };
-
-      try {
-        const res = await fetch(PA_TIME_REQUEST_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-
-        if (!res.ok) throw new Error("PA error " + res.status);
-
-        document.getElementById("successTitle").textContent = "Request received!";
-        document.getElementById("successDetail").innerHTML = `
-          <strong>${name}</strong>, thanks for letting us know.<br/>
-          All current sessions for <strong style="color:#005a2b;">${topic.name}</strong> are full.<br/>
-          We'll reach out at <strong>${email}</strong> if new time slots open up.`;
-
-        const reqNote = document.getElementById("successRequestNote");
-        if (prefs.length > 0 || note.trim()) {
-          let noteHtml = "<strong>Your preferences:</strong><br/>";
-          if (prefs.length > 0) noteHtml += `Preferred times: ${prefs.join(", ")}<br/>`;
-          if (note.trim())      noteHtml += `Notes: "${note.trim()}"`;
-          reqNote.innerHTML = noteHtml;
-          reqNote.style.display = "block";
+        if (!name) {
+            document.getElementById('nameError').style.display = 'block';
+            valid = false;
         } else {
-          reqNote.style.display = "none";
+            document.getElementById('nameError').style.display = 'none';
         }
 
-        const savedNote = document.getElementById("emailSentNote");
-        document.getElementById("emailSentText").textContent = "Your request has been saved to the sign-up spreadsheet.";
-        savedNote.style.display = "flex";
+        if (!email || !email.includes('@')) {
+            document.getElementById('emailError').style.display = 'block';
+            valid = false;
+        } else {
+            document.getElementById('emailError').style.display = 'none';
+        }
 
-        showSuccess();
+        if (!valid) return;
 
-      } catch (err) {
-        setLoading(false);
-        document.getElementById("sessionError").textContent =
-          "Request could not be saved — please try again or contact the organizer directly.";
-        console.error("PA time request error:", err);
-      }
+        // Collect selections per slot
+        const submissions = [];
+        for (let i = 1; i <= 5; i++) {
+            const slotKey = 'slot' + i;
+            const radios = document.querySelectorAll(`input[name="${slotKey}"]`);
+            radios.forEach(r => {
+                if (r.checked) {
+                    submissions.push({
+                        name: name,
+                        email: email,
+                        timeSlot: slotLabels[slotKey],
+                        topic: r.value,
+                        timestamp: new Date().toISOString()
+                    });
+                }
+            });
+        }
+
+        // POST each selected slot to Power Automate
+        try {
+            const promises = submissions.map(payload =>
+                fetch(SIGNUP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                })
+            );
+            await Promise.all(promises);
+        } catch (err) {
+            console.error('Signup submission error:', err);
+        }
+
+        document.getElementById('signupForm').style.display = 'none';
+        document.getElementById('successBox').style.display = 'block';
+        window.scrollTo(0, 0);
     }
-  }
-
-  function showSuccess() {
-    setLoading(false);
-    document.getElementById("formSection").style.display    = "none";
-    document.getElementById("successSection").style.display = "block";
-  }
-
-  function registerAnother() {
-    document.getElementById("fullName").value = "";
-    document.getElementById("email").value    = "";
-    document.getElementById("formSection").style.display    = "block";
-    document.getElementById("successSection").style.display = "none";
-    renderTopics();
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
-  renderTopics();
 </script>
 </body>
 </html>
