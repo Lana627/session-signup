@@ -584,7 +584,8 @@
 
         fetch(REQUEST_URL, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'text/plain' },
+            mode: 'no-cors',
             body: JSON.stringify(payload)
         }).then(() => {
             document.getElementById('req-' + slotKey + '-confirm').style.display = 'block';
@@ -644,7 +645,8 @@
             const promises = submissions.map(payload =>
                 fetch(SIGNUP_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'text/plain' },
+                    mode: 'no-cors',
                     body: JSON.stringify(payload)
                 })
             );
