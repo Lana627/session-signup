@@ -529,9 +529,37 @@
 </div>
 
 <script>
-    // Power Automate Flow URLs
-    const SIGNUP_URL = 'https://default06219a4aa83544d5afaf3926343bfb.89.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/0703cff8078e46598d541843a50bde22/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=r_RwHDRpkYPBsxnz8VqieKbq9tMRMnYforptkQXVrJ0';
-    const REQUEST_URL = 'https://default06219a4aa83544d5afaf3926343bfb.89.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/a13d552a61ba4fbdb2f9a89af4930378/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=0dD2lHp1bZQHspCNZN5OJ91BOhAlmp41IovYyaAM43w';
+    // SharePoint Site & List Configuration
+    const SP_SITE = 'https://syngenta.sharepoint.com/sites/RACALL';
+    const SP_SIGNUP_LIST = 'Breakout signups';
+    const SP_REQUEST_LIST = 'Breakout Requests';
+
+    async function getFormDigest() {
+        const resp = await fetch(SP_SITE + '/_api/contextinfo', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Accept': 'application/json;odata=verbose' }
+        });
+        const data = await resp.json();
+        return data.d.GetContextWebInformation.FormDigestValue;
+    }
+
+    async function postToSharePoint(listName, itemData) {
+        const digest = await getFormDigest();
+        const body = Object.assign({ '__metadata': { 'type': 'SP.Data.' + listName.replace(/\s/g, '_x0020_') + 'ListItem' } }, itemData);
+        const resp = await fetch(SP_SITE + "/_api/web/lists/getbytitle('" + listName + "')/items", {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json;odata=verbose',
+                'Content-Type': 'application/json;odata=verbose',
+                'X-RequestDigest': digest
+            },
+            body: JSON.stringify(body)
+        });
+        if (!resp.ok) throw new Error('SharePoint error: ' + resp.status);
+        return resp;
+    }
 
     const slotLabels = {
         slot1: '10:15 AM - 11:00 AM',
@@ -582,11 +610,13 @@
             timestamp: new Date().toISOString()
         };
 
-        fetch(REQUEST_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain' },
-            mode: 'no-cors',
-            body: JSON.stringify(payload)
+        postToSharePoint(SP_REQUEST_LIST, {
+            Title: nameVal,
+            Email: emailVal,
+            Time_x0020_slot: slotLabel,
+            Requested_x0020_topic: selectedTopic || 'Not specified',
+            Notes: msgVal,
+            Timestamp: new Date().toISOString()
         }).then(() => {
             document.getElementById('req-' + slotKey + '-confirm').style.display = 'block';
             document.getElementById('req-' + slotKey + '-name').disabled = true;
@@ -643,11 +673,12 @@
         // POST each selected slot to Power Automate
         try {
             const promises = submissions.map(payload =>
-                fetch(SIGNUP_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain' },
-                    mode: 'no-cors',
-                    body: JSON.stringify(payload)
+                postToSharePoint(SP_SIGNUP_LIST, {
+                    Title: payload.name,
+                    Email: payload.email,
+                    Time_x0020_slot: payload.timeSlot,
+                    Topic: payload.topic,
+                    Timestamp: payload.timestamp
                 })
             );
             await Promise.all(promises);
